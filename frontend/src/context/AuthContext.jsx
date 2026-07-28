@@ -1,0 +1,75 @@
+import { createContext, useState, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router';
+import { apiFetch } from '../api/api';
+
+const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const userData = localStorage.getItem('user');
+    if (token && userData) {
+      setUser(JSON.parse(userData));
+    }
+    setLoading(false);
+  }, []);
+
+  const login = async (email, password) => {
+    try {
+      const { data } = await apiFetch('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+      });
+      if (data.success) {
+        const { token, user } = data.results;
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
+        setUser(user);
+        navigate('/notes');
+        return { success: true };
+      }
+      return { success: false, message: data.message };
+    } catch (error) {
+      return { success: false, message: 'Login failed' };
+    }
+  };
+
+  const register = async (name, email, password) => {
+    try {
+      const { data } = await apiFetch('/auth/register', {
+        method: 'POST',
+        body: JSON.stringify({ name, email, password }),
+      });
+      if (data.success) {
+        const { token, user } = data.results;
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
+        setUser(user);
+        navigate('/notes');
+        return { success: true };
+      }
+      return { success: false, message: data.message };
+    } catch (error) {
+      return { success: false, message: 'Registration failed' };
+    }
+  };
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setUser(null);
+    navigate('/login');
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = () => useContext(AuthContext);
