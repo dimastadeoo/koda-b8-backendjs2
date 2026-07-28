@@ -1,0 +1,27 @@
+{
+  "name": "backendjs2",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/dimastadeoo/koda-b8-backendjs2#readme",
+  "bugs": {
+    "url": "https://github.com/dimastadeoo/koda-b8-backendjs2/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dimastadeoo/koda-b8-backendjs2.git"
+  },
+  "license": "MIT",
+  "author": "dimastadeoo",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npm run dev --workspace=backend & npm run dev --workspace=frontend",
+    "start:backend": "npm run dev --workspace=backend",
+    "start:frontend": "npm run dev --workspace=frontend"
+  },
+  "workspaces": [
+    "backend",
+    "frontend"
+  ]
+}
