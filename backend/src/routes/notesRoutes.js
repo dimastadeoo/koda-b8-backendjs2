@@ -7,8 +7,8 @@ const router = Router()
 // Semua route notes membutuhkan autentikasi
 router.use(authenticate)
 
-router.get('', getNotes)
-router.post('', createNoteHandler)
+router.get('/', getNotes)
+router.post('/', createNoteHandler)
 router.patch('/:id', updateNoteHandler)
 router.delete('/:id', deleteNoteHandler)
 
