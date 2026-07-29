@@ -1,44 +1,33 @@
 import { useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationsContext';
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const { login } = useAuth();
     const { showNotification } = useNotification();
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
         setLoading(true);
         const result = await login(email, password);
         setLoading(false);
         if (result.success) {
-            showNotification({
-                title: 'Login Success',
-                message: 'Welcome back!',
-                type: 'success',
-            });
+            showNotification('Success', result.message || 'Login successful!', 'success');
+            navigate('/notes');
         } else {
-            showNotification({
-                title: 'Login Failed',
-                message: result.message || 'Invalid credentials',
-                type: 'error',
-            });
-            setError(result.message);
+            showNotification('Error', result.message || 'Login failed', 'error');
         }
     };
-
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="bg-white p-8 rounded-lg shadow-md w-96">
                 <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
-                {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
                         <label className="block text-sm font-medium mb-1">Email</label>
