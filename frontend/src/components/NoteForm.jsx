@@ -14,8 +14,6 @@ export default function NoteForm({ onAdd }) {
         if (result.success) {
             setTitle('');
             setContent('');
-        } else {
-            alert(result.message);
         }
     };
 
