@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationsContext';
 
@@ -8,39 +8,25 @@ export default function Register() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const { register } = useAuth();
     const { showNotification } = useNotification();
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
         if (password !== confirmPassword) {
-            setError('Passwords do not match');
-            showNotification({
-                title: 'Registration Failed',
-                message: 'Passwords do not match',
-                type: 'error',
-            });
+            showNotification('Error', 'Passwords do not match', 'error');
             return;
         }
         setLoading(true);
         const result = await register(name, email, password);
         setLoading(false);
         if (result.success) {
-            showNotification({
-                title: 'Registration Success',
-                message: 'Account created! Welcome!',
-                type: 'success',
-            });
+            showNotification('Success', result.message || 'Registration successful!', 'success');
+            navigate('/notes');
         } else {
-            showNotification({
-                title: 'Registration Failed',
-                message: result.message,
-                type: 'error',
-            });
-            setError(result.message);
+            showNotification('Error', result.message || 'Registration failed', 'error');
         }
     };
 
@@ -48,7 +34,6 @@ export default function Register() {
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="bg-white p-8 rounded-lg shadow-md w-96">
                 <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
-                {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
                         <label className="block text-sm font-medium mb-1">Name</label>
