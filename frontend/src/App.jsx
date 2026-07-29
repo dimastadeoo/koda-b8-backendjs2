@@ -13,7 +13,7 @@ function ProtectedRoute({ children }) {
 }
 
 function App() {
-  const { notification, hideNotification } = useNotification();
+  const { modal, closeModal } = useNotification();
 
   return (
     <>
@@ -23,13 +23,16 @@ function App() {
         <Route path="/notes" element={<ProtectedRoute><Notes /></ProtectedRoute>} />
         <Route path="/" element={<Navigate to="/notes" replace />} />
       </Routes>
-
       <Modal
-        isOpen={notification.isOpen}
-        onClose={hideNotification}
-        title={notification.title}
-        message={notification.message}
-        type={notification.type}
+        isOpen={modal.isOpen}
+        onClose={closeModal}
+        title={modal.title}
+        message={modal.message}
+        type={modal.type}
+        onConfirm={modal.onConfirm}
+        showCancel={modal.showCancel}
+        confirmText={modal.confirmText}
+        cancelText={modal.cancelText}
       />
     </>
   );
