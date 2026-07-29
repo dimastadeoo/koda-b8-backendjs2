@@ -5,8 +5,6 @@ import corsMiddleware from './src/middlewares/corsMiddleware.js'
 import { initDataFiles } from './src/lib/fileHelper.js'
 import {constants} from "node:http2"
 
-dotenv.config()
-
 const app = express()
 const PORT = process.env.PORT || 8080
 
