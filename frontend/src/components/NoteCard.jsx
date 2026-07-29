@@ -9,7 +9,7 @@ export default function NoteCard({ note, onUpdate, onDelete }) {
         const result = await onUpdate(note.id, title, content);
         if (result.success) {
             setEditing(false);
-        } 
+        }
     };
 
     return (
