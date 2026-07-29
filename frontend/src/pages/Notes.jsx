@@ -67,7 +67,7 @@ export default function Notes() {
     const updateNote = async (id, title, content) => {
         try {
             const { data } = await apiFetch(`/notes/${id}`, {
-                method: 'PUT',
+                method: 'PATCH',
                 body: JSON.stringify({ title, content }),
             });
             if (data.success) {
