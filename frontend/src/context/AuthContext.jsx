@@ -12,10 +12,12 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         const userData = localStorage.getItem('user');
-        if (token && userData) {
-            setUser(JSON.parse(userData));
-        }
-        setLoading(false);
+        setTimeout(() => {
+            if (token && userData) {
+                setUser(JSON.parse(userData));
+            }
+            setLoading(false);
+        })
     }, []);
 
     const login = async (email, password) => {
@@ -34,7 +36,7 @@ export const AuthProvider = ({ children }) => {
             }
             return { success: false, message: data.message };
         } catch (error) {
-            return { success: false, message: 'Login failed' };
+            return { success: false, message: 'Login failed because ' + error  };
         }
     };
 
@@ -54,7 +56,7 @@ export const AuthProvider = ({ children }) => {
             }
             return { success: false, message: data.message };
         } catch (error) {
-            return { success: false, message: 'Registration failed' };
+            return { success: false, message: 'Registration failed because ' + error  };
         }
     };
 
@@ -71,4 +73,5 @@ export const AuthProvider = ({ children }) => {
     );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);

@@ -27,7 +27,9 @@ export default function Notes() {
     };
 
     useEffect(() => {
-        fetchNotes();
+        setTimeout(()=>{
+            fetchNotes();
+        })
     }, []);
 
     const addNote = async (title, content) => {
