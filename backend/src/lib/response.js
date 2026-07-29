@@ -8,8 +8,8 @@ export const successResponse = (res, message, data = null, statusCode = 200) => 
     success: true,
     message: message,
     ...(data !== null && { results: data }),
-  })
-}
+  });
+};
 
 /**
  * 
@@ -19,6 +19,6 @@ export const errorResponse = (res, message, statusCode = 500) => {
   const response = {
     success: false,
     message: message,
-  }
-  res.status(statusCode).json(response)
-}
+  };
+  res.status(statusCode).json(response);
+};

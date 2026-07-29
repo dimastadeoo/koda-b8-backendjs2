@@ -18,10 +18,17 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npm run dev --workspace=backend & npm run dev --workspace=frontend",
     "start:backend": "npm run dev --workspace=backend",
-    "start:frontend": "npm run dev --workspace=frontend"
+    "start:frontend": "npm run dev --workspace=frontend",
+    "lint": "eslint . --ext .js,.jsx --ignore-pattern 'node_modules' --ignore-pattern 'dist' --ignore-pattern 'data'",
+    "lint:fix": "eslint . --ext .js,.jsx --fix --ignore-pattern 'node_modules' --ignore-pattern 'dist' --ignore-pattern 'data'"
   },
   "workspaces": [
     "backend",
     "frontend"
-  ]
+  ],
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.8.0",
+    "globals": "^17.8.0"
+  }
 }
