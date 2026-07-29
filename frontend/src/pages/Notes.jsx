@@ -14,23 +14,25 @@ export default function Notes() {
     const { user, logout } = useAuth();
     const { showNotification, showConfirm } = useNotification();
 
-    const fetchNotes = async () => {
-        try {
-            const { data } = await apiFetch('/notes');
-            if (data.success) setNotes(data.results);
-            else setError(data.message);
-        } catch {
-            setError('Failed to fetch notes');
-        } finally {
-            setLoading(false);
-        }
-    };
-
     useEffect(() => {
-        setTimeout(()=>{
-            fetchNotes();
-        })
-    }, []);
+        const fetchNotes = async () => {
+            try {
+                const { data } = await apiFetch('/notes');
+                if (data.success) setNotes(data.results);
+                else {
+                    showNotification('Error', data.message || 'Failed to add note', 'error');
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    navigate("/login")
+                }
+            } catch {
+                setError('Failed to fetch notes');
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchNotes()
+    }, [navigate, showNotification]);
 
     const addNote = async (title, content) => {
         try {

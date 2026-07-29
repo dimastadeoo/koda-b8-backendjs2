@@ -14,11 +14,6 @@ export const AuthProvider = ({ children }) => {
         const userData = localStorage.getItem('user');
         setTimeout(() => {
             if (token && userData) {
-                if (token === "undefined") {
-                    localStorage.removeItem('token');
-                    localStorage.removeItem('user');
-                    navigate("/login")
-                }
                 const user = JSON.parse(userData)
                 if (user?.status) {
                     setUser(user);
