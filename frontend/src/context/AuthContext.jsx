@@ -14,11 +14,19 @@ export const AuthProvider = ({ children }) => {
         const userData = localStorage.getItem('user');
         setTimeout(() => {
             if (token && userData) {
-                setUser(JSON.parse(userData));
+                if (token === "undefined") {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    navigate("/login")
+                }
+                const user = JSON.parse(userData)
+                if (user?.status) {
+                    setUser(user);
+                }
             }
             setLoading(false);
         })
-    }, []);
+    }, [navigate]);
 
     const login = async (email, password) => {
         try {
@@ -27,16 +35,20 @@ export const AuthProvider = ({ children }) => {
                 body: JSON.stringify({ email, password }),
             });
             if (data.success) {
-                const { token, user } = data.results;
+                let { token, user } = data.results;
+                user = {
+                    ...user,
+                    status: data.success
+                }
                 localStorage.setItem('token', token);
                 localStorage.setItem('user', JSON.stringify(user));
                 setUser(user);
                 navigate('/notes');
-                return { success: true };
+                return { success: true, message: data.message };
             }
             return { success: false, message: data.message };
         } catch (error) {
-            return { success: false, message: 'Login failed because ' + error  };
+            return { success: false, message: 'Login failed because ' + error };
         }
     };
 
@@ -56,7 +68,7 @@ export const AuthProvider = ({ children }) => {
             }
             return { success: false, message: data.message };
         } catch (error) {
-            return { success: false, message: 'Registration failed because ' + error  };
+            return { success: false, message: 'Registration failed because ' + error };
         }
     };
 

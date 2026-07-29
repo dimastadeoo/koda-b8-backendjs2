@@ -51,7 +51,7 @@ export async function login(req, res) {
     }
 
     const results = { token: email, user: { id: user.id, email: user.email } };
-    Response.successResponse(res, 'User registered successfully', results);
+    Response.successResponse(res, `User ${user.email} Login successfully`, results);
 
   } catch (error) {
     const err = "Fail Login Because " + error;
