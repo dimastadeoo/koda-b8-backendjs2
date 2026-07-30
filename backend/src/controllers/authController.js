@@ -1,6 +1,8 @@
 import { findByEmail, createUser } from '../models/usersModel.js';
 import * as Response from "../lib/response.js";
 import { constants } from "node:http2";
+import libJwt from '../lib/jwt.js';
+
 
 /**
  * 
@@ -49,8 +51,8 @@ export async function login(req, res) {
     if (!user || user.password !== password) {
       return Response.errorResponse(res, 'User or password wrong', constants.HTTP_STATUS_UNAUTHORIZED);
     }
-
-    const results = { token: email, user: { id: user.id, email: user.email } };
+    const token = libJwt.sign({userId: user.id});
+    const results = { token: token, user: { id: user.id, email: user.email } };
     Response.successResponse(res, `User ${user.email} Login successfully`, results);
 
   } catch (error) {
