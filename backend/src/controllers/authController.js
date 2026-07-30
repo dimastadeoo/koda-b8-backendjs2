@@ -2,8 +2,10 @@ import { findByEmail, createUser } from '../models/usersModel.js';
 import * as Response from "../lib/response.js";
 import { constants } from "node:http2";
 import libJwt from '../lib/jwt.js';
+import bcrypt from "bcrypt";
 
 
+const saltRounds = 10;
 /**
  * 
  * @param {import("express").Request} req 
@@ -22,8 +24,8 @@ export async function register(req, res) {
       return Response.errorResponse(res, 'Email already exists', constants.HTTP_STATUS_BAD_REQUEST);
 
     }
-
-    const user = await createUser(email, password, name);
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const user = await createUser(email, hashedPassword, name);
     const results = { name: user.name, email: user.email };
 
     Response.successResponse(res, 'User registered successfully', results, constants.HTTP_STATUS_CREATED);
@@ -48,9 +50,11 @@ export async function login(req, res) {
     }
 
     const user = await findByEmail(email);
-    if (!user || user.password !== password) {
+    const passwordCheck = await bcrypt.compare(password, user.password);
+    if (!user || !passwordCheck) {
       return Response.errorResponse(res, 'User or password wrong', constants.HTTP_STATUS_UNAUTHORIZED);
     }
+    
     const token = libJwt.sign({userId: user.id});
     const results = { token: token, user: { id: user.id, email: user.email } };
     Response.successResponse(res, `User ${user.email} Login successfully`, results);
