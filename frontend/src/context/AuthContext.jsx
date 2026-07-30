@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
         setTimeout(() => {
             if (token && userData) {
                 const user = JSON.parse(userData)
-                if (user?.status) {
+                if (typeof user == 'object' && user !== null && !Array.isArray(user)) {
                     setUser(user);
                 }
             }
