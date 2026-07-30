@@ -7,7 +7,7 @@ import {constants} from "node:http2";
 
 const app = express();
 // eslint-disable-next-line no-undef
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT_BACKEND || 8080;
 
 // Inisialisasi folder data dan file JSON
 await initDataFiles();
