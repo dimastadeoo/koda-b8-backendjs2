@@ -25,7 +25,7 @@ export async function register(req, res) {
 
     }
     const hashedPassword = await bcrypt.hash(password, saltRounds);
-    const user = await createUser(email, hashedPassword, name);
+    const user = await createUser(name, email, hashedPassword);
     const results = { name: user.name, email: user.email };
 
     Response.successResponse(res, 'User registered successfully', results, constants.HTTP_STATUS_CREATED);
