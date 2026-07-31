@@ -1,33 +1,24 @@
-import { getDataPath, readJSON, writeJSON, getNextId } from '../lib/fileHelper.js';
-
-const usersFilePath = getDataPath('users.json');
+import pool from '../lib/conn.js';
 
 export async function findAll() {
-  return await readJSON(usersFilePath);
+  const result = await pool.query('SELECT * FROM users ORDER BY id');
+  return result.rows;
 }
 
 export async function findByEmail(email) {
-  const users = await readJSON(usersFilePath);
-  return users.find(u => u.email === email);
+  const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+  return result.rows[0];
 }
 
 export async function findById(id) {
-  const users = await readJSON(usersFilePath);
-  return users.find(u => u.id === id);
+  const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+  return result.rows[0];
 }
 
-export async function createUser(email, password, name) {
-  const users = await readJSON(usersFilePath);
-  const newId = await getNextId(usersFilePath);
-  const newUser = {
-    id: newId,
-    name,
-    email,
-    password,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  };
-  users.push(newUser);
-  await writeJSON(usersFilePath, users);
-  return newUser;
+export async function createUser(name, email, password) {
+  const result = await pool.query(
+    'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *',
+    [name, email, password]
+  );
+  return result.rows[0];
 }
