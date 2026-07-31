@@ -3,6 +3,7 @@ import router from './src/routes/index.js';
 import corsMiddleware from './src/middlewares/corsMiddleware.js';
 import { initDataFiles } from './src/lib/fileHelper.js';
 import {constants} from "node:http2";
+import pool from './src/lib/conn.js';
 
 
 const app = express();
@@ -16,6 +17,16 @@ app.use(express.json());
 app.use(express.urlencoded());
 
 app.use(corsMiddleware);
+
+// Test koneksi database (opsional)
+try {
+  await pool.query('SELECT NOW()');
+  console.log('✅ Database connected successfully.');
+} catch (error) {
+  console.error('❌ Database connection failed:', error);
+  // eslint-disable-next-line no-undef
+  process.exit(1);
+}
 app.use(router);
 
 // Route default
