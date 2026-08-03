@@ -50,7 +50,7 @@ export async function createNoteHandler(req, res) {
  */
 export async function updateNoteHandler(req, res) {
   try {
-    const noteId = parseInt(req.params.id); // ID sekarang integer
+    const noteId = parseInt(req.params.id);
     const { title, content } = req.body;
     if (!title || !content) {
       return Response.errorResponse(res, 'Title and content required', constants.HTTP_STATUS_BAD_REQUEST);
@@ -60,7 +60,7 @@ export async function updateNoteHandler(req, res) {
     if (!note) {
       return Response.errorResponse(res, 'Note not found', constants.HTTP_STATUS_NOT_FOUND);
     }
-    if (note.userId !== req.user.userId) {
+    if (note.id_user !== req.user.userId) {
       return Response.errorResponse(res, 'Forbidden: you do not own this note', constants.HTTP_STATUS_FORBIDDEN);
     }
 
@@ -86,7 +86,7 @@ export async function deleteNoteHandler(req, res) {
     if (!note) {
       return Response.errorResponse(res, 'Note not found', constants.HTTP_STATUS_NOT_FOUND);
     }
-    if (note.userId !== req.user.userId) {
+    if (note.id_user !== req.user.userId) {
       return Response.errorResponse(res, 'Forbidden: you do not own this note', constants.HTTP_STATUS_FORBIDDEN);
     }
 
