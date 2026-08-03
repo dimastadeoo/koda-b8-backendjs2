@@ -118,7 +118,7 @@ docker compose up --build
 
     Autentikasi – Register/Login dengan email & password.
 
-    Token – Disimpan di localStorage, dikirim via header Authorization: Bearer <email>.
+    Token – Disimpan di localStorage, dikirim via header Authorization: Bearer Token JWT
 
     CRUD Notes – Setiap user hanya bisa mengakses notes miliknya sendiri.
 
