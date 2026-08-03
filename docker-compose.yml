@@ -1,0 +1,60 @@
+services:
+  database:
+    image: postgres:alpine
+    container_name: sticky_note_DB
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql
+    networks:
+      - isolated
+    healthcheck:
+      # Hardcode user 'postgres' atau pakai $$ untuk escape
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: dockerfile
+    container_name: backend_note
+    restart: always
+    env_file:
+      - ./backend/.env
+    ports: 
+      - "8080:8080"
+    depends_on:
+      database:
+          condition: service_healthy
+    networks:
+      - isolated
+      - internal
+
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: dockerfile
+    container_name: frontend_note
+    restart: always
+    env_file:
+      - ./frontend/.env
+    ports:
+      - "5555:80"
+    depends_on:
+      - backend
+    networks:
+      - internal
+
+volumes:
+  pgdata:
+
+networks:
+  internal:
+    driver: bridge
+  isolated:
+    internal: true
