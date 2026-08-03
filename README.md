@@ -106,6 +106,13 @@ Semua response mengikuti format:
 }
 ```
 
+## Jalankan dengan docker compose
+
+```bash
+docker compose up --build
+
+```
+
 
 ## ✨ Fitur
 
